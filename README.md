@@ -26,6 +26,7 @@ var dns = require('dns'),
     dnscache = require('dnscache')({
         "enable" : true,
         "ttl" : 300,
+        "keepalive": 100,
         "cachesize" : 1000
     });
     
@@ -50,6 +51,7 @@ Configuration
 
    * `enable` - Whether dnscache is enabled or not, defaults to `false`.
    * `ttl` - ttl for cache-entries. Default: `300`
+   * `keepalive` - keepalive for cache-entries. Default: `100`
    * `cachesize` - number of cache entries, defaults to `1000`
    * `cache` - If a custom cache needs to be used instead of the supplied cache implementation. Only for Advanced Usage. Custom Cache needs to have same interface for `get` and `set`.
 

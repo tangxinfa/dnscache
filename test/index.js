@@ -10,6 +10,7 @@ var assert = require('assert'),
     mod = require('../lib/index.js')({
         enable: true,
         ttl: 300,
+        keepalive: 100,
         cachesize: 1000
     });
     
@@ -69,6 +70,7 @@ describe('dnscache main test suite', function() {
         require('../lib/index.js')({
             enable: true, 
             ttl: 300,
+            keepalive: 100,
             cachesize: 1000
         });
         assert.ok(dns.internalCache);
@@ -227,6 +229,7 @@ describe('dnscache main test suite', function() {
             //verify default values
             assert.ok(conf);
             assert.equal(conf.ttl, 300);
+            assert.equal(conf.keepalive, 100);
             assert.equal(conf.cachesize, 1000);
             done();
         });

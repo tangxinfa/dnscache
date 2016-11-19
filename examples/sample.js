@@ -5,7 +5,7 @@
  */
 
 var dns = require('dns'),
-    dnscache = require('../lib/index.js')({"enable" : true, "ttl" : 300, "cachesize" : 1000}),
+    dnscache = require('../lib/index.js')({"enable" : true, "ttl" : 300, "keepalive" : 100, "cachesize" : 1000}),
     now = Date.now(), now1;
     //to use the cached dns either of dnscahe or dns can be called    
     dnscache.lookup('www.yahoo.com', function(err, result) {

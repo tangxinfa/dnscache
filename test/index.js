@@ -235,4 +235,60 @@ describe('dnscache main test suite', function() {
         });
     });
 
+    it('cache should evict after expire if no keepalive', function(done) {
+        //if created from other tests
+        if (require('dns').internalCache) {
+            delete require('dns').internalCache;
+        }
+        var testee = require('../lib/index.js')({
+            enable: true,
+            ttl: 2,
+            keepalive: 0,
+            cachesize: 1000
+        });
+
+        var tick = 0;
+
+        var timer = setInterval(function () {
+            var i = tick;
+            testee.lookup('127.0.0.1', function() {
+                if (i < 2) {
+                    assert.equal(testee.internalCache.data['lookup_127.0.0.1_0'].hit, i, 'hit should be ' + i + ' after ' + i + ' second');
+                    return;
+                }
+                assert.equal(testee.internalCache.data['lookup_127.0.0.1_0'].hit, 0, 'hit should be 0 after ttl expire');
+                clearInterval(timer);
+                done();
+            });
+            ++tick;
+        }, 1*1000);
+    });
+
+    it('cache should not evict after expire if keepalive', function(done) {
+        //if created from other tests
+        if (require('dns').internalCache) {
+            delete require('dns').internalCache;
+        }
+        var testee = require('../lib/index.js')({
+            enable: true,
+            ttl: 2,
+            keepalive: 1,
+            cachesize: 1000
+        });
+
+        var tick = 0;
+        var timer = setInterval(function () {
+            var i = tick;
+            testee.lookup('127.0.0.1', function() {
+                if (i < 2) {
+                    assert.equal(testee.internalCache.data['lookup_127.0.0.1_0'].hit, i, 'hit should be ' + i + ' after ' + i + ' second');
+                    return;
+                }
+                assert.notEqual(testee.internalCache.data['lookup_127.0.0.1_0'].hit, 0, 'hit should not be 0 after ttl expire');
+                clearInterval(timer);
+                done();
+            });
+            ++tick;
+        }, 1*1000);
+    });
 });
